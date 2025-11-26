@@ -70,10 +70,10 @@ def operator_dashboard(user=Depends(get_current_user), db: Session = Depends(get
         # 5️⃣ Recent operator payments
         recent_payments = (
             db.query(Payment.id, Payment.amount, Payment.method, Payment.status,
-                    Payment.transaction_id, Payment.timestamp)
+                    Payment.transaction_id, Payment.created_at)
             .join(Booking, Payment.booking_id == Booking.id)
             .filter(Booking.trip_id.in_(trip_ids))
-            .order_by(Payment.timestamp.desc())
+            .order_by(Payment.created_at.desc())
             .limit(5)
             .all()
         )
@@ -85,7 +85,7 @@ def operator_dashboard(user=Depends(get_current_user), db: Session = Depends(get
                 "method": p.method or "",
                 "status": p.status or "",
                 "transaction_id": p.transaction_id or "",
-                "timestamp": str(p.timestamp) if p.timestamp else None,
+                "timestamp": str(p.created_at) if p.created_at else None,
             }
             for p in recent_payments
         ]
