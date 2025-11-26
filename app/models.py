@@ -155,7 +155,7 @@ class Payment(Base):
     status = Column(Enum("initiated", "success", "failed", name="payment_status"), default="initiated")
     amount = Column(Float)
     transaction_id = Column(String)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     booking = relationship("Booking", back_populates="payments")
 
