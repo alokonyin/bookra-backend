@@ -137,7 +137,9 @@ def operator_dashboard(user=Depends(get_current_user), db: Session = Depends(get
 
     except Exception as e:
         print("❌ Operator dashboard error:", e)
-        raise HTTPException(status_code=500, detail="Failed to load operator dashboard")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Failed to load operator dashboard: {str(e)}")
 
 
 
