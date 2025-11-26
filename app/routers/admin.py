@@ -241,18 +241,18 @@ def admin_recent_payments(db: Session = Depends(get_db), user=Depends(get_curren
     if getattr(user.role, "value", str(user.role)) != "admin":
         raise HTTPException(status_code=403, detail="Access denied")
 
-    # Payments table structure: id, booking_id, method, status, amount, transaction_id, timestamp
+    # Payments table structure: id, booking_id, method, status, amount, transaction_id, created_at
     # Bookings table structure: passengers (not num_seats), total_amount (not total_price)
     sql = text("""
         SELECT
           p.id, p.booking_id, p.method, p.status, p.amount,
-          p.transaction_id, p.timestamp,
+          p.transaction_id, p.created_at,
           b.passengers, b.total_amount,
           u.email AS traveler_email, u.phone AS traveler_phone
         FROM payments p
         LEFT JOIN bookings b ON b.id = p.booking_id
         LEFT JOIN users u ON u.id = b.traveler_id
-        ORDER BY p.timestamp DESC
+        ORDER BY p.created_at DESC
         LIMIT 10
     """)
     rows = db.execute(sql).mappings().all()
